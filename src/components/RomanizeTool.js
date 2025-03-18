@@ -16,6 +16,8 @@ const RomanizeTool = () => {
   const [inputText, setInputText] = useState("");
   const [romanizedText, setRomanizedText] = useState("");
   const [copied, setCopied] = useState(false);
+  const [error, setError] = useState("");
+  const [charCount, setCharCount] = useState(0); // Add state for character count
 
   // Function to romanize the string
   const romanizeString = (str) => {
@@ -29,8 +31,18 @@ const RomanizeTool = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // Check if inputText is empty or only whitespace
+    if (!inputText.trim()) {
+      setError("Vui lòng nhập văn bản để chỉnh sửa!");
+      setRomanizedText("");
+      setCharCount(0); // Reset character count on error
+      return;
+    }
+    // Clear error and process input if not empty
+    setError("");
     const result = romanizeString(inputText);
     setRomanizedText(result);
+    setCharCount(result.length); // Set character count based on result length
     setCopied(false);
   };
 
@@ -58,6 +70,7 @@ const RomanizeTool = () => {
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
               placeholder="Nhập vào đây"
+              autoFocus
             />
             <Button variant="primary" type="submit">
               <FontAwesomeIcon icon={faMagic} className="me-2" /> Biến thành URL
@@ -66,7 +79,13 @@ const RomanizeTool = () => {
         </Form.Group>
       </Form>
 
-      {romanizedText && (
+      {error && (
+        <Alert variant="danger" className="mt-3">
+          {error}
+        </Alert>
+      )}
+
+      {romanizedText && !error && (
         <div className="mt-3">
           <h4>
             <FontAwesomeIcon icon={faCheckCircle} className="me-2" /> Kết quả:
@@ -77,6 +96,9 @@ const RomanizeTool = () => {
               <FontAwesomeIcon icon={faCopy} className="me-2" /> Sao chép
             </Button>
           </InputGroup>
+          <p className="mt-2">
+            Số ký tự: <strong>{charCount}</strong>
+          </p>
           {copied && (
             <Alert variant="success" className="mt-2">
               <FontAwesomeIcon icon={faCheck} className="me-2" /> Đã sao chép!
@@ -90,11 +112,11 @@ const RomanizeTool = () => {
           <FontAwesomeIcon icon={faList} className="me-2" /> Ví dụ:
         </h5>
         <ul>
-          <li>"Xin chào!" → "xin-chao"</li>
-          <li>"Hello World!" → "hello-world"</li>
-          <li>"This & That" → "this-that"</li>
-          <li>"Café Olé" → "cafe-ole"</li>
-          <li>"Multiple Spaces" → "multiple-spaces"</li>
+          <li>"Xin chào!" → "xin-chao" (8 ký tự)</li>
+          <li>"Hello World!" → "hello-world" (11 ký tự)</li>
+          <li>"This & That" → "this-that" (9 ký tự)</li>
+          <li>"Café Olé" → "cafe-ole" (8 ký tự)</li>
+          <li>"Multiple Spaces" → "multiple-spaces" (15 ký tự)</li>
         </ul>
       </div>
     </Container>
