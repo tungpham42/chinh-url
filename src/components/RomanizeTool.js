@@ -59,26 +59,28 @@ const RomanizeTool = () => {
   };
 
   return (
-    <Container className="my-5 col-lg-6 col-md-8 col-sm-10 col-12">
-      <h2 className="mb-4">
-        <FontAwesomeIcon icon={faLink} className="me-2" /> Công cụ chỉnh sửa URL
-      </h2>
+    <Container className="my-5 col-lg-8 col-md-10 col-sm-10 col-12">
+      <h1 className="mb-4">
+        <FontAwesomeIcon icon={faLink} className="me-2" />
+        Công cụ chỉnh sửa URL
+      </h1>
 
       <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3">
-          <Form.Label>
-            <FontAwesomeIcon icon={faKeyboard} className="me-2" /> Nhập vào đoạn
-            văn bản muốn chỉnh:
+          <Form.Label className="h5">
+            <FontAwesomeIcon icon={faKeyboard} className="me-2" />
+            Nhập vào đoạn văn bản muốn chỉnh:
           </Form.Label>
           <InputGroup>
             <Form.Control
+              size="lg"
               type="text"
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
               placeholder="Nhập vào đây"
               autoFocus
             />
-            <Button variant="primary" type="submit">
+            <Button size="lg" variant="primary" type="submit">
               <FontAwesomeIcon icon={faMagic} className="me-2" />
               Biến thành URL
             </Button>
@@ -95,17 +97,19 @@ const RomanizeTool = () => {
 
       {romanizedText && !error && (
         <div className="mt-3">
-          <h4>
+          <h5>
             <FontAwesomeIcon icon={faCheckCircle} className="me-2" />
             Kết quả:
-          </h4>
+          </h5>
           <InputGroup>
             <Form.Control
+              size="lg"
               type="text"
               value={romanizedText}
               onChange={handleResultChange} // Add onChange handler
             />
             <Button
+              size="lg"
               variant={copied ? "success" : "outline-success"}
               onClick={handleCopy}
             >
