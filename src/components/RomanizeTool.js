@@ -1,6 +1,16 @@
 import React, { useState } from "react";
 import { Container, Form, Button, InputGroup, Alert } from "react-bootstrap";
 import { transliterate } from "transliteration";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faLink,
+  faKeyboard,
+  faMagic,
+  faCheckCircle,
+  faCopy,
+  faCheck,
+  faList,
+} from "@fortawesome/free-solid-svg-icons";
 
 const RomanizeTool = () => {
   const [inputText, setInputText] = useState("");
@@ -32,11 +42,16 @@ const RomanizeTool = () => {
 
   return (
     <Container className="my-5 col-lg-6 col-md-8 col-sm-10 col-12">
-      <h2 className="mb-4">Công cụ chỉnh sửa URL</h2>
+      <h2 className="mb-4">
+        <FontAwesomeIcon icon={faLink} className="me-2" /> Công cụ chỉnh sửa URL
+      </h2>
 
       <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3">
-          <Form.Label>Nhập vào đoạn văn bản muốn chỉnh:</Form.Label>
+          <Form.Label>
+            <FontAwesomeIcon icon={faKeyboard} className="me-2" /> Nhập vào đoạn
+            văn bản muốn chỉnh:
+          </Form.Label>
           <InputGroup>
             <Form.Control
               type="text"
@@ -45,7 +60,7 @@ const RomanizeTool = () => {
               placeholder="Nhập vào đây"
             />
             <Button variant="primary" type="submit">
-              Biến thành URL
+              <FontAwesomeIcon icon={faMagic} className="me-2" /> Biến thành URL
             </Button>
           </InputGroup>
         </Form.Group>
@@ -53,23 +68,27 @@ const RomanizeTool = () => {
 
       {romanizedText && (
         <div className="mt-3">
-          <h4>Kết quả:</h4>
+          <h4>
+            <FontAwesomeIcon icon={faCheckCircle} className="me-2" /> Kết quả:
+          </h4>
           <InputGroup>
             <Form.Control type="text" value={romanizedText} readOnly />
             <Button variant="outline-success" onClick={handleCopy}>
-              Sao chép
+              <FontAwesomeIcon icon={faCopy} className="me-2" /> Sao chép
             </Button>
           </InputGroup>
           {copied && (
             <Alert variant="success" className="mt-2">
-              Đã sao chép!
+              <FontAwesomeIcon icon={faCheck} className="me-2" /> Đã sao chép!
             </Alert>
           )}
         </div>
       )}
 
       <div className="mt-4">
-        <h5>Ví dụ:</h5>
+        <h5>
+          <FontAwesomeIcon icon={faList} className="me-2" /> Ví dụ:
+        </h5>
         <ul>
           <li>"Xin chào!" → "xin-chao"</li>
           <li>"Hello World!" → "hello-world"</li>
@@ -81,4 +100,5 @@ const RomanizeTool = () => {
     </Container>
   );
 };
+
 export default RomanizeTool;
