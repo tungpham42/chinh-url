@@ -8,7 +8,7 @@ import {
   faMagic,
   faCheckCircle,
   faCopy,
-  faCheck,
+  faCircleExclamation,
   faList,
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -17,7 +17,7 @@ const RomanizeTool = () => {
   const [romanizedText, setRomanizedText] = useState("");
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState("");
-  const [charCount, setCharCount] = useState(0); // Add state for character count
+  const [charCount, setCharCount] = useState(0);
 
   // Function to romanize the string
   const romanizeString = (str) => {
@@ -31,18 +31,16 @@ const RomanizeTool = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Check if inputText is empty or only whitespace
     if (!inputText.trim()) {
       setError("Vui lòng nhập văn bản để chỉnh sửa!");
       setRomanizedText("");
-      setCharCount(0); // Reset character count on error
+      setCharCount(0);
       return;
     }
-    // Clear error and process input if not empty
     setError("");
     const result = romanizeString(inputText);
     setRomanizedText(result);
-    setCharCount(result.length); // Set character count based on result length
+    setCharCount(result.length);
     setCopied(false);
   };
 
@@ -50,6 +48,14 @@ const RomanizeTool = () => {
     navigator.clipboard.writeText(romanizedText);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  // Handler for changes to the result text
+  const handleResultChange = (e) => {
+    const newText = e.target.value;
+    setRomanizedText(newText);
+    setCharCount(newText.length); // Update character count based on edited text
+    setCopied(false); // Reset copied state if text is modified
   };
 
   return (
@@ -73,7 +79,8 @@ const RomanizeTool = () => {
               autoFocus
             />
             <Button variant="primary" type="submit">
-              <FontAwesomeIcon icon={faMagic} className="me-2" /> Biến thành URL
+              <FontAwesomeIcon icon={faMagic} className="me-2" />
+              Biến thành URL
             </Button>
           </InputGroup>
         </Form.Group>
@@ -81,6 +88,7 @@ const RomanizeTool = () => {
 
       {error && (
         <Alert variant="danger" className="mt-3">
+          <FontAwesomeIcon icon={faCircleExclamation} className="me-2" />
           {error}
         </Alert>
       )}
@@ -88,22 +96,26 @@ const RomanizeTool = () => {
       {romanizedText && !error && (
         <div className="mt-3">
           <h4>
-            <FontAwesomeIcon icon={faCheckCircle} className="me-2" /> Kết quả:
+            <FontAwesomeIcon icon={faCheckCircle} className="me-2" />
+            Kết quả:
           </h4>
           <InputGroup>
-            <Form.Control type="text" value={romanizedText} readOnly />
-            <Button variant="outline-success" onClick={handleCopy}>
-              <FontAwesomeIcon icon={faCopy} className="me-2" /> Sao chép
+            <Form.Control
+              type="text"
+              value={romanizedText}
+              onChange={handleResultChange} // Add onChange handler
+            />
+            <Button
+              variant={copied ? "success" : "outline-success"}
+              onClick={handleCopy}
+            >
+              <FontAwesomeIcon icon={faCopy} className="me-2" />
+              {copied ? "Đã sao chép" : "Sao chép"}
             </Button>
           </InputGroup>
           <p className="mt-2">
             Số ký tự: <strong>{charCount}</strong>
           </p>
-          {copied && (
-            <Alert variant="success" className="mt-2">
-              <FontAwesomeIcon icon={faCheck} className="me-2" /> Đã sao chép!
-            </Alert>
-          )}
         </div>
       )}
 
