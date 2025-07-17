@@ -170,6 +170,8 @@ const RomanizeTool = () => {
             <li>
               "Multiple Spaces" → <code>multiple-spaces</code> (15 ký tự)
             </li>
+            <li>"こんにちは" → "konnitiha" (9 ký tự)</li>
+            <li>"안녕하세요" → "annyeonghaseyo" (14 ký tự)</li>
           </ul>
         </div>
       </div>
