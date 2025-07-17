@@ -6,19 +6,19 @@ import { Container } from "react-bootstrap";
 const Footer = () => {
   const currentYear = new Date().getFullYear();
   return (
-    <footer className="text-dark pt-3 pb-1 mt-5">
+    <footer className="bg-light text-dark pt-4 pb-3 mt-5 border-top">
       <Container>
-        <p className="text-center">
+        <p className="text-center mb-1 small">
           &copy; {currentYear}{" "}
           <a
-            className="text-dark font-weight-bold text-decoration-none"
+            className="text-primary fw-bold text-decoration-none"
             href="https://tungpham42.github.io"
             target="_blank"
             rel="noreferrer"
           >
             Phạm Tùng
-          </a>
-          {", "}
+          </a>{" "}
+          ·{" "}
           <a
             href="https://github.com/tungpham42/chinh-url"
             target="_blank"

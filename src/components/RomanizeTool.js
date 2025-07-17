@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Container, Form, Button, InputGroup, Alert } from "react-bootstrap";
+import {
+  Container,
+  Form,
+  Button,
+  InputGroup,
+  Alert,
+  Modal,
+} from "react-bootstrap";
 import { transliterate } from "transliteration";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -10,6 +17,7 @@ import {
   faCopy,
   faCircleExclamation,
   faList,
+  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 
 const RomanizeTool = () => {
@@ -18,8 +26,9 @@ const RomanizeTool = () => {
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState("");
   const [charCount, setCharCount] = useState(0);
+  const [showModal, setShowModal] = useState(false);
+  const [fadeOut, setFadeOut] = useState(false);
 
-  // Function to romanize the string
   const romanizeString = (str) => {
     return transliterate(str)
       .toLowerCase()
@@ -50,91 +59,144 @@ const RomanizeTool = () => {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  // Handler for changes to the result text
   const handleResultChange = (e) => {
     const newText = e.target.value;
     setRomanizedText(newText);
-    setCharCount(newText.length); // Update character count based on edited text
-    setCopied(false); // Reset copied state if text is modified
+    setCharCount(newText.length);
+    setCopied(false);
+  };
+
+  const triggerReset = () => {
+    setFadeOut(true);
+    setTimeout(() => {
+      setInputText("");
+      setRomanizedText("");
+      setCopied(false);
+      setError("");
+      setCharCount(0);
+      setFadeOut(false);
+    }, 300); // sync with CSS transition
   };
 
   return (
-    <Container className="my-5 col-lg-8 col-md-10 col-sm-10 col-12">
-      <h1 className="mb-4">
-        <FontAwesomeIcon icon={faLink} className="me-2" />
-        Công cụ chỉnh sửa URL
-      </h1>
+    <Container className="py-5">
+      <div
+        className="bg-white p-4 p-md-5 rounded shadow-soft mx-auto"
+        style={{ maxWidth: "800px" }}
+      >
+        <h1 className="mb-4 text-primary">
+          <FontAwesomeIcon icon={faLink} className="me-2" />
+          Công cụ chỉnh sửa URL
+        </h1>
 
-      <Form onSubmit={handleSubmit}>
-        <Form.Group className="mb-3">
-          <Form.Label className="h5">
-            <FontAwesomeIcon icon={faKeyboard} className="me-2" />
-            Nhập vào đoạn văn bản muốn chỉnh:
-          </Form.Label>
-          <InputGroup>
-            <Form.Control
-              size="lg"
-              type="text"
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
-              placeholder="Nhập vào đây"
-              autoFocus
-            />
-            <Button size="lg" variant="primary" type="submit">
-              <FontAwesomeIcon icon={faMagic} className="me-2" />
-              Biến thành URL
-            </Button>
-          </InputGroup>
-        </Form.Group>
-      </Form>
+        <Form onSubmit={handleSubmit}>
+          <Form.Group className="mb-4">
+            <Form.Label className="h5 text-dark">
+              <FontAwesomeIcon icon={faKeyboard} className="me-2" />
+              Nhập vào đoạn văn bản muốn chỉnh:
+            </Form.Label>
+            <InputGroup>
+              <Form.Control
+                type="text"
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
+                placeholder="Nhập vào đây..."
+                autoFocus
+              />
+              <Button variant="primary" type="submit">
+                <FontAwesomeIcon icon={faMagic} />
+              </Button>
+              <Button
+                variant="outline-secondary"
+                type="button"
+                onClick={() => setShowModal(true)}
+                disabled={!inputText}
+              >
+                <FontAwesomeIcon icon={faTrash} />
+              </Button>
+            </InputGroup>
+          </Form.Group>
+        </Form>
 
-      {error && (
-        <Alert variant="danger" className="mt-3">
-          <FontAwesomeIcon icon={faCircleExclamation} className="me-2" />
-          {error}
-        </Alert>
-      )}
+        {error && (
+          <Alert variant="danger" className="mt-3">
+            <FontAwesomeIcon icon={faCircleExclamation} className="me-2" />
+            {error}
+          </Alert>
+        )}
 
-      {romanizedText && !error && (
-        <div className="mt-3">
+        {romanizedText && !error && (
+          <div className={`mt-4 ${fadeOut ? "fade-out" : ""}`}>
+            <h5 className="text-success">
+              <FontAwesomeIcon icon={faCheckCircle} className="me-2" />
+              Kết quả:
+            </h5>
+            <InputGroup>
+              <Form.Control
+                type="text"
+                value={romanizedText}
+                onChange={handleResultChange}
+              />
+              <Button
+                variant={copied ? "success" : "outline-success"}
+                onClick={handleCopy}
+              >
+                <FontAwesomeIcon icon={faCopy} />
+              </Button>
+            </InputGroup>
+            <p className="mt-2 mb-0 text-muted">
+              Số ký tự: <strong>{charCount}</strong>
+            </p>
+          </div>
+        )}
+
+        <div className="mt-5">
           <h5>
-            <FontAwesomeIcon icon={faCheckCircle} className="me-2" />
-            Kết quả:
+            <FontAwesomeIcon icon={faList} className="me-2" /> Ví dụ:
           </h5>
-          <InputGroup>
-            <Form.Control
-              size="lg"
-              type="text"
-              value={romanizedText}
-              onChange={handleResultChange} // Add onChange handler
-            />
-            <Button
-              size="lg"
-              variant={copied ? "success" : "outline-success"}
-              onClick={handleCopy}
-            >
-              <FontAwesomeIcon icon={faCopy} className="me-2" />
-              {copied ? "Đã sao chép" : "Sao chép"}
-            </Button>
-          </InputGroup>
-          <p className="mt-2">
-            Số ký tự: <strong>{charCount}</strong>
-          </p>
+          <ul className="text-muted">
+            <li>
+              "Xin chào!" → <code>xin-chao</code> (8 ký tự)
+            </li>
+            <li>
+              "Hello World!" → <code>hello-world</code> (11 ký tự)
+            </li>
+            <li>
+              "This & That" → <code>this-that</code> (9 ký tự)
+            </li>
+            <li>
+              "Café Olé" → <code>cafe-ole</code> (8 ký tự)
+            </li>
+            <li>
+              "Multiple Spaces" → <code>multiple-spaces</code> (15 ký tự)
+            </li>
+          </ul>
         </div>
-      )}
-
-      <div className="mt-4">
-        <h5>
-          <FontAwesomeIcon icon={faList} className="me-2" /> Ví dụ:
-        </h5>
-        <ul>
-          <li>"Xin chào!" → "xin-chao" (8 ký tự)</li>
-          <li>"Hello World!" → "hello-world" (11 ký tự)</li>
-          <li>"This & That" → "this-that" (9 ký tự)</li>
-          <li>"Café Olé" → "cafe-ole" (8 ký tự)</li>
-          <li>"Multiple Spaces" → "multiple-spaces" (15 ký tự)</li>
-        </ul>
       </div>
+
+      {/* Reset Confirmation Modal */}
+      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Xác nhận reset</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Bạn có chắc chắn muốn xoá dữ liệu đã nhập không?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Hủy
+          </Button>
+          <Button
+            variant="danger"
+            onClick={() => {
+              setShowModal(false);
+              triggerReset();
+            }}
+          >
+            Xác nhận reset
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 };
